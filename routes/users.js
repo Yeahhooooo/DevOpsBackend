@@ -2,6 +2,7 @@ var express = require('express');
 const {User} = require("../src/model/User");
 var router = express.Router();
 
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -20,9 +21,9 @@ router.post('/register',async function (req, res) {
   })
   res.send({
     code: 200,
-    data: {
-      token: user.username
-    }
+    msg: '注册成功',
+    data: user._id,
+    ok: true
   })
 })
 
@@ -33,26 +34,28 @@ router.post('/login',async (req, res) => {
     console.log(user)
     res.send({
       code: 200,
-      data: {
-        token: user.username
-      }
+      msg: '登录成功',
+      data: user._id,
+      ok: true
     })
   } else {
     res.send({
       code: 201,
-      data: {
-        message: '账号或者密码不正确'
-      }
+      msg: '登录失败',
+      data: '账号或者密码不正确',
+      ok: false
     })
   }
 })
 
 router.get('/info', async (req, res, next) => {
   const user = await User.findOne({
-    username: req.headers.token  })
+    _id: req.headers.token  })
   res.send({
     code: 200,
-    data: user
+    msg: '获取成功',
+    data: user,
+    ok: true
   })
 })
 
@@ -62,7 +65,17 @@ router.get('/list', async(req, res, next)=>{
   res.send({
     code: 200,
     msg: '获取成功',
-    data: user
+    data: user,
+    ok: true
+  })
+})
+
+router.post('/logout',async (req,res) => {
+  res.send({
+    code: 200,
+    msg: '登出成功',
+    data: null,
+    ok: true
   })
 })
 
